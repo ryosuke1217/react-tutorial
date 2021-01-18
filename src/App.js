@@ -47,6 +47,39 @@ function Loading() {
   return <p>Loading...</p>
 }
 
+function Form(props) {
+  function handleSubmit(event) {
+    event.preventDefault();
+    const { breed } = event.target.elements;
+    props.onFormSubmit(breed.value);
+  }
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <div className="field has-addons">
+          <div className="control is-expanded">
+            <div className="select is-fullwidth">
+              <select name="breed" defaultValue="shiba">
+                <option value="shiba">柴犬</option>
+                <option value="akita">秋田犬</option>
+                <option value="pomeranian">ポメラニアン</option>
+                <option value="pug">パグ</option>
+                <option value="bulldog">ブルドッグ</option>
+                <option value="chihuahua">チワワ</option>
+              </select>
+            </div>
+          </div>
+          <div className="control">
+            <button type="submit" className="button is-dark">
+              Reload
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
+}
+
 function Main() {
   const [urls, setUrls] = useState(null);
   useEffect(() => {
@@ -54,8 +87,18 @@ function Main() {
       setUrls(urls);
     });
   }, []);
+  function reloadImages(breed) {
+    fetchImages(breed).then((urls) => {
+      setUrls(urls);
+    });
+  }
   return (
     <main>
+      <section class="section">
+        <div className="container">
+          <Form onFormSubmit={reloadImages} />
+        </div>
+      </section>
       <section className="section">
         <div className="container">
           <Gallery urls={urls}/>
